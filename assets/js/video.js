@@ -15,13 +15,53 @@ let Video = {
   onReady(videoId, socket) {
     let msgContainer = document.getElementById("msg-container")
     let msgInput = document.getElementById("msg-input")
-    let postbutton = document.getElementById("msg-submit")
+    let postButton = document.getElementById("msg-submit")
     let vidChannel = socket.channel("videos:" + videoId)
+
+    postButton.addEventListener("click", e => {
+      this.newAnnotation(vidChannel, msgInput)
+    })
+
+    msgInput.addEventListener("keypress", e => {
+      if (e.key === 'Enter') {
+        this.newAnnotation(vidChannel, msgInput)
+      }
+    })
+
+    vidChannel.on("new_annotation", (resp) => {
+      this.renderAnnotation(msgContainer, resp)
+    })
+
     vidChannel.join()
       .receive("ok", resp => console.log("joined the video channel", resp))
       .receive("error", reason => console.log("join failed", reason))
 
-    vidChannel.on("ping", ({ count }) => console.log("PING", count))
+  },
+
+  newAnnotation(channel, msgInput) {
+    let payload = { body: msgInput.value, at: Player.getCurrentTime() }
+    channel.push("new_annotation", payload)
+      .receive("error", e => console.log(e))
+    msgInput.value = ""
+  },
+
+  esc(str) {
+    let div = document.createElement("div")
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
+  },
+
+  renderAnnotation(msgContainer, { user, body, at }) {
+    let template = document.createElement("div")
+
+    template.innerHTML = `
+      <a href="#" data-seek="${this.esc(at)}">
+      <b> ${this.esc(user.username)}</b>: ${this.esc(body)}
+      </a>
+    `
+
+    msgContainer.appendChild(template)
+    msgContainer.scrollTop = msgContainer.scrollHeight
   }
 }
 
