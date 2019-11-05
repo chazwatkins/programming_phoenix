@@ -2,14 +2,14 @@ defmodule RumblWeb.VideoViewTest do
   use RumblWeb.ConnCase, async: true
   import Phoenix.View
 
-  alias Rumbl.{Multimedia, Accounts}
+  alias Rumbl.Multimedia
   alias Rumbl.Multimedia.{Video, Category}
 
   test "renders index.html", %{conn: conn} do
-    videos = {
+    videos = [
       %Video{id: "1", title: "dogs"},
       %Video{id: "2", title: "cats"}
-    }
+    ]
 
     content =
       render_to_string(
@@ -27,7 +27,6 @@ defmodule RumblWeb.VideoViewTest do
   end
 
   test "renders new.html", %{conn: conn} do
-    owner = %Accounts.User{}
     changeset = Multimedia.change_video(%Video{})
     categories = [%Category{id: 123, name: "cats"}]
 
