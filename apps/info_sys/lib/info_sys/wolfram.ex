@@ -26,12 +26,13 @@ defmodule InfoSys.Wolfram do
     [%Result{backend: __MODULE__, score: 95, text: to_string(answer)}]
   end
 
+  @http Application.get_env(:info_sys, :wolfram)[:http_client] || :httpc
   defp fetch_xml(query) do
     {:ok, {_, _, body}} =
       query
       |> url()
       |> String.to_charlist()
-      |> :httpc.request()
+      |> @http.request()
 
     body
   end
