@@ -46,7 +46,8 @@ defmodule RumblWeb.MixProject do
       {:rumbl, in_umbrella: true},
       {:info_sys, in_umbrella: true},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:phoenix_live_view, "~> 0.3.1"}
     ]
   end
 

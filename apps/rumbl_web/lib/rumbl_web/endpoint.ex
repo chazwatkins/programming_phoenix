@@ -1,6 +1,8 @@
 defmodule RumblWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :rumbl_web
 
+  socket "/live", Phoenix.LiveView.Socket, websocket: true
+
   socket "/socket", RumblWeb.UserSocket,
     websocket: true,
     longpoll: false
